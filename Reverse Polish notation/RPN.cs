@@ -21,39 +21,17 @@ namespace Reverse_Polish_notation
         /// </summary>
         public string GetResult()
         {
+            string result;
             try
             {
-                //DEBUG ONLY
-                Console.WriteLine("Preparing...");
-                //EODebug
-
                 PrepareExpression();
-
-                //DEBUG ONLY
-                Console.WriteLine("Preparing done. Result:");
-                Console.WriteLine(expression);
-                List<string> converted = ConvertToReversePolishNotation();
-                Console.WriteLine("Convertation done. Result:");
-                int pos = 0;
-                foreach (string str in converted)
-                {
-                    pos++;
-                    Console.WriteLine("{0} , {1}", pos, str);
-                }
-                //EODebug
-
+                result = CalculateExpression().ToString();
             }
             catch (FormatException e)
             {
-                return "Error handling the expression. \n Message:\n" + e.Message
-                    //DEBUG ONLY
-                    + "\n Stack Trace:\n" + e.StackTrace;
-                    //EODebug
+                return "Error handling the expression. \n Message:\n" + e.Message;
             }
-            //DEBUG ONLY
-            Console.WriteLine("Job in RPN done. Returning result.");
-            //EODebug
-            return CalculateExpression().ToString();
+            return result;
         }
         /// <summary>
         /// Returns standart expression in Reverse Polish notation.
@@ -116,13 +94,20 @@ namespace Reverse_Polish_notation
                 if (!standart_operators.Contains(expression[pos].ToString()))
                 {
                     if (Char.IsDigit(expression[pos]))
+                    {
                         for (int i = pos + 1; i < expression.Length &&
                             (Char.IsDigit(expression[i]) || expression[i] == ',' || expression[i] == '.'); i++)
+                        {
                             s += expression[i];
+                        }
+                    }
                     else if (Char.IsLetter(expression[pos]))
-                        for (int i = pos + 1; i < expression.Length &&
-                            (Char.IsLetter(expression[i]) /*|| Char.IsDigit(expression[i])*/); i++)
+                    {
+                        for (int i = pos + 1; i < expression.Length && Char.IsLetter(expression[i]); i++)
+                        {
                             s += expression[i];
+                        }
+                    }
                 }
                 yield return s;
                 pos += s.Length;
